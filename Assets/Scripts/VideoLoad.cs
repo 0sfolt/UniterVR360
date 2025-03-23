@@ -29,6 +29,7 @@ public class VideoLoad : MonoBehaviour
 
         // Lancer le processus de connexion et récupération des vidéos
         StartCoroutine(LoginAndFetchVideos());
+        
     }
 
     IEnumerator LoginAndFetchVideos()
@@ -37,11 +38,13 @@ public class VideoLoad : MonoBehaviour
         if (!string.IsNullOrEmpty(token))
         {
             yield return StartCoroutine(GetVideos());
+            
         }
         else
         {
             Debug.LogError("Impossible de récupérer les vidéos, token manquant !");
         }
+        
     }
 
     IEnumerator Login()
@@ -54,9 +57,8 @@ public class VideoLoad : MonoBehaviour
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-
+        request.timeout = 45;
         Debug.Log("Tentative de connexion...");
-
         yield return request.SendWebRequest();
         Debug.Log("connecté");
         if (request.result == UnityWebRequest.Result.Success)
@@ -109,6 +111,7 @@ public class VideoLoad : MonoBehaviour
                 string fileName = Path.GetFileName(videoPath);
                 StartCoroutine(DownloadVideo(fullUrl, fileName));
             }
+           
         }
         else
         {
